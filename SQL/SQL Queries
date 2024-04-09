@@ -1,1 +1,68 @@
+/*To view all the records in the dataset*/
+SELECT * FROM vgsales;
 
+/*Total year wise global sales */
+SELECT YEAR,SUM(Global_Sales) AS Total_Sales
+FROM vgsales 
+GROUP BY Year 
+ORDER BY Year,SUM(Global_Sales) 
+
+/*Total year wise sales across NA region */
+SELECT YEAR,SUM(NA_Sales) AS Total_NA_Sales
+FROM vgsales 
+GROUP BY Year 
+ORDER BY Year,SUM(NA_Sales) 
+
+/*Total year wise sales across EU region */
+SELECT YEAR,SUM(EU_Sales) AS Total_EU_Sales
+FROM vgsales 
+GROUP BY Year 
+ORDER BY Year,SUM(EU_Sales) 
+
+/*Total year wise sales across JP region */
+SELECT YEAR,SUM(JP_Sales) AS Total_JP_Sales
+FROM vgsales 
+GROUP BY Year 
+ORDER BY Year,SUM(JP_Sales) 
+
+/*Total year wise sales across EU region */
+SELECT YEAR,SUM(NA_Sales) AS Total_NA_Sales,SUM(EU_Sales) AS Total_EU_Sales,SUM(JP_Sales) AS Total_JP_Sales
+FROM vgsales 
+GROUP BY Year 
+ORDER BY Year,SUM(NA_Sales),SUM(JP_Sales),SUM(JP_Sales)
+
+/*Brand-wise sales*/
+SELECT Publisher,SUM(Global_Sales) AS Total_Global_Sales_PubWise
+FROM vgsales 
+GROUP BY Publisher
+
+/*Max global sales for different publishers*/
+SELECT Publisher,MAX(Global_Sales) AS Max_Global_Sales_PubWise
+FROM vgsales 
+GROUP BY Publisher
+
+/*Genre-wise sales*/
+SELECT Genre,SUM(Global_Sales) AS Total_Global_Sales_GenreWise
+FROM vgsales 
+GROUP BY Genre
+
+/*Best selling Genre*/
+SELECT Genre,MAX(Global_Sales) AS Max_Global_Sales_GenreWise
+FROM vgsales 
+GROUP BY Genre
+
+/*Best selling game*/
+SELECT Name
+FROM (
+    SELECT Name, SUM(Global_Sales) AS Total_Global_Sales
+    FROM vgsales
+    GROUP BY Name
+) AS SalesSummary
+WHERE Total_Global_Sales = (
+    SELECT MAX(Total_Global_Sales)
+    FROM (
+        SELECT SUM(Global_Sales) AS Total_Global_Sales
+        FROM vgsales
+        GROUP BY Name
+    ) AS TotalSalesPerGame
+);
